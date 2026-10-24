@@ -6,11 +6,10 @@
 #include <QUrl>
 
 int main(int argc, char *argv[]) {
-    QQuickWindow::setGraphicsApi(QSGRendererInterface::OpenGL);
     QGuiApplication app(argc, argv);
     Backend backend;
     QQmlApplicationEngine engine;
     (*engine.rootContext()).setContextProperty("backend", &backend);
-    engine.load(QUrl("qrc:/main.qml"));
+    engine.load(QUrl("qrc:/gui/main.qml"));
     return app.exec();
 }

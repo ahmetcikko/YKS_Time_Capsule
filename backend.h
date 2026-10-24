@@ -1,12 +1,13 @@
 #pragma once
 
 #include <QObject>
-#include <fstream>
+#include <QString>
+#include <QStringList>
 
 class Backend : public QObject {
     Q_OBJECT
 
-public:
-    Q_INVOKABLE void read_current_progress(std::string& container);
-    void write_new_notes(std::ofstream file);
+  public:
+    Q_INVOKABLE QStringList read_current_progress();
+    Q_INVOKABLE void write_new_notes(QString line);
 };
