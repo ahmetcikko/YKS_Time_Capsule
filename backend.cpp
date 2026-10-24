@@ -22,11 +22,13 @@ QStringList Backend::read_current_progress() {
                 notes = "";
             }
         }
+
 #ifndef NDEBUG
         for (QString message : messages) {
             std::cout << message.toStdString() + "\n\n\n";
         }
 #endif
+
         file.close();
         return messages;
     } else {
@@ -39,6 +41,7 @@ void Backend::write_new_notes(QString line) {
     std::chrono::zoned_time local_time{std::chrono::current_zone(),
                                        global_time};
     std::string time = std::format("{:%d-%m-%Y %H:%M}", local_time);
+
     if (std::filesystem::exists("notes.txt")) {
         std::ofstream file("notes.txt", std::ofstream::app);
         if (line.toStdString() != "")
