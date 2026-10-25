@@ -1,9 +1,9 @@
 #include "backend.h"
-#include <chrono>
 #include <filesystem>
-#include <format>
 #include <fstream>
 #include <iostream>
+#include <ctime> // chrono isnt properly supported on
+// many compilers like llvm so i switched to ctime
 
 QStringList Backend::read_current_progress() {
     QStringList messages;
@@ -37,21 +37,26 @@ QStringList Backend::read_current_progress() {
 }
 
 void Backend::write_new_notes(QString line) {
-    auto global_time = std::chrono::system_clock::now();
-    std::chrono::zoned_time local_time{std::chrono::current_zone(),
-                                       global_time};
-    std::string time = std::format("{:%d-%m-%Y %H:%M}", local_time);
+    time_t now = time(nullptr);
+    struct tm *local_time = localtime(&now);
+
+    int year = (*local_time).tm_year + 1900;
+    int month = (*local_time).tm_mon + 1;
+    int day = (*local_time).tm_mday;
+
+    int hour = (*local_time).tm_hour;
+    int minute = (*local_time).tm_min;
 
     if (std::filesystem::exists("notes.txt")) {
         std::ofstream file("notes.txt", std::ofstream::app);
         if (line.toStdString() != "")
-            file << "\n" + time + "\n" + line.toStdString() + "\n" +
+            file << "\n" << day << "-" << month << "-" << year << " " << hour << ":" << minute << "\n" + line.toStdString() + "\n" +
                         "===||| END NOTE |||===";
         file.close();
     } else {
         std::ofstream file("notes.txt", std::ofstream::app);
         if (line.toStdString() != "")
-            file << time + "\n" + line.toStdString() + "\n" +
+            file << day << "-" << month << "-" << year << " " << hour << ":" << minute << "\n" + line.toStdString() + "\n" +
                         "===||| END NOTE |||===";
         file.close();
     }

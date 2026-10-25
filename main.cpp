@@ -3,8 +3,10 @@
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include <QUrl>
+#include <QQuickStyle>
 
 int main(int argc, char *argv[]) {
+    QQuickStyle::setStyle("Fusion");
     QGuiApplication app(argc, argv);
     Backend backend;
     QQmlApplicationEngine engine;
